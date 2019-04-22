@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./index.css">
+    <title>Vue E-shop</title>
+</head>
+<body>
+    <main>
+        <div class="page-container container p-0">
+            <div id="cart-button-view"></div>
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="product-preview flex-md-row d-flex">
+                            <div class="product-info p-2 p-md-5 col-md-6">
+                                <h1 class="mb-5">
+                                <strong>My paintings shop!</strong>
+                                </h1>
+                                <div class="product-detail-info">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text" for="inputGroupSelect01">Painting</label>
+                                        </div>
+                                        <div id="paintings-selectbox-view"></div>
+                                    </div>
+                                    <div id="painting-description-view"></div>
+                                    <div id="add-to-cart-form-view"></div>
+                                </div>
+                            </div>
+                            <div class="product-images p-2 p-md-5 col-md-6 bg-light align-items-center d-flex">
+                                <div id="painting-image-view"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flip-card-back border bg-light text-dark p-5">
+                            <h2 class="text-center py-3">Delivery Information</h2>
+
+                            <form class="text-left col-6 ml-auto mr-auto">
+                                <div class="d-flex flex-md-row">
+                                    <div class="col-12 col-md-6 pl-md-0 form-group">
+                                        <label for="payment-methods">Payment method</label>
+                                        <select id="payment-methods-selectbox-view"></select>
+                                    </div>
+                
+                                    <div class="col-12 col-md-6 pr-md-0 form-group">
+                                        <label for="shipping-methods">Delivery method</label>
+                                        <select id="shipping-methods-selectbox-view"></select>
+                                    </div>
+                                </div>
+                
+                                <div class="form-group">
+                                    <label for="customer-email">Email address</label>
+                                    <input type="email" class="form-control" id="customer-email" placeholder="Enter email" data-apicart-cart-add-parameter="shippingAddress.email">
+                                </div>
+                
+                                <div class="d-flex flex-md-row">
+                                    <div class="col-12 col-md-6 pl-md-0 form-group">
+                                        <label for="customer-first-name">First name</label>
+                                        <input type="text" class="form-control" id="customer-first-name" placeholder="First name" data-apicart-cart-add-parameter="shippingAddress.firstName">
+                                    </div>
+                
+                                    <div class="col-12 col-md-6 pr-md-0 form-group">
+                                        <label for="customer-last-name">Last name</label>
+                                        <input type="text" class="form-control" id="customer-last-name" placeholder="Last name" data-apicart-cart-add-parameter="shippingAddress.lastName">
+                                    </div>
+                                </div>
+                
+                                <div class="form-group">
+                                    <label for="customer-street-and-number">Street and number</label>
+                                    <input type="text" class="form-control" id="customer-street-and-number" placeholder="Street and number" data-apicart-cart-add-parameter="shippingAddress.streetAndNumber">
+                                </div>
+                
+                                <div class="d-flex flex-md-row">
+                                    <div class="col-12 col-md-6 pl-md-0 form-group">
+                                        <label for="customer-city">City</label>
+                                        <input type="text" class="form-control" id="customer-city" placeholder="City" data-apicart-cart-add-parameter="shippingAddress.city">
+                                    </div>
+                
+                                    <div class="col-12 col-md-6 pr-md-0 form-group">
+                                        <label for="customer-zip">Zip</label>
+                                        <input type="number" class="form-control" id="customer-zip" placeholder="Zip" data-apicart-cart-add-parameter="shippingAddress.zip">
+                                    </div>
+                                </div>
+                
+                                <button class="btn btn-danger apicart-cart-finish">Finish order</button>
+                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <template id="cart-button-template">
+        <div id="cart-button-view-wrapper" class="text-right mb-5">
+            <a role="button" id="cart-view-button" class="d-inline-block border p-3 rounded" style="font-size: 24px; border-color: #61d3cb !important; color: #61d3cb;">
+                <i class="fas fa-shopping-cart fa-lg align-middle"></i>
+                <span v-if=" ! cart.itemsCount" class="d-inline-block ml-2 align-middle">Empty</span>
+                <span v-else class="d-inline-block ml-2 align-middle">
+                    Items {{ cart.itemsCount }}, Price ${{ cart.itemsPrice }}
+                </span>
+            </a>
+        </div>
+    </template>
+
+    <template id="paintings-selectbox-template">
+        <select class="custom-select" id="inputGroupSelect01" @change="selectPainting($event)">
+            <option v-for="painting of paintings" class="" :value="painting.id">{{ painting.name }} - ${{ painting.price }}</option>
+        </select>
+    </template>
+
+    <template id="painting-description-template">
+        <div id="painting-description-view" class="mb-5">
+            <strong class="h3">Painting description</strong>
+            <div>{{ selectedPainting.description}}</div>
+        </div>
+    </template>
+
+    <template id="painting-image-template">
+        <img :src="selectedPainting.image" alt="" class="mw-100 shadow">
+    </template>
+
+    <template id="add-to-cart-form-template">
+        <div id="add-to-cart-form-view">
+            <div class="input-group mb-3 col-md-6 p-0 mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Quantity</span>
+                </div>
+                <input type="number" v-model="quantity" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+            <div>
+                <a role="button" class="btn btn-lg btn-dark d-block" @click="addPaintingToCart">Add To Cart</a>
+            </div>
+        </div>
+    </template>
+
+    <template id="modal-template">
+        <transition name="modal">
+        <div class="modal-mask">
+            <div class="modal-wrapper">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <slot name="header"></slot>
+                </div>
+    
+                <div class="modal-body">
+                    <slot name="body"></slot>
+                </div>
+    
+                <div class="modal-footer">
+                    <slot name="footer"></slot>
+                </div>
+            </div>
+            </div>
+        </div>
+        </transition>
+    </template>
+
+    <template id="shipping-methods-selectbox-template">
+        <select class="custom-select mr-sm-2" id="shipping-methods" data-apicart-cart-add-parameter="shippingMethod.id">
+            <option disabled selected>---</option>
+            <option v-for="shippingMethod of shippingMethods" v-if="shippingMethod.all.enabled" :value="shippingMethod.all.id">
+                {{ shippingMethod.all.name }}
+            </option>
+        </select>
+    </template>
+
+    <template id="payment-methods-selectbox-template">
+        <select class="custom-select mr-sm-2" id="payment-methods" data-apicart-cart-add-parameter="paymentMethod.id">
+            <option disabled selected>---</option>
+            <option v-for="paymentMethod of paymentMethods" v-if="paymentMethod.all.enabled" :value="paymentMethod.all.id">
+                {{ paymentMethod.all.name }}
+            </option>
+        </select>
+    </template>
+  
+    <div id="add-painting-to-cart-popup-view">
+        <modal v-if="showModal" @close="showModal = false">
+            <h3 slot="header">Cart Updated</h3>
+            <div slot="body">
+                <p>
+                    Item <strong>{{ itemName}}</strong> was successfully added into the cart.
+                </p>
+                <img :src="itemImage" class="mw-100" alt="">
+            </div>
+            <div slot="footer" class="w-100 justify-content-between d-flex">
+                <button class="btn btn-lg btn-light" @click="showModal = false">
+                    <i class="fas fa-chevron-circle-left align-middle"></i> <span class="align-middle">Continue shopping</span>
+                </button>
+                <button class="btn btn-lg btn-danger" @click="showOrderRecapitulation">
+                    <span class="align-middle">Finish order</span> <i class="fas fa-chevron-circle-right align-middle"></i>
+                </button>
+            </div>
+        </modal>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/vuex@2.0.0"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap.native/2.0.26/bootstrap-native-v4.min.js" async></script>
+    <script src="http://localhost:19005/v1/?components=cart,customer,order,payment-methods,shipping-methods"></script>
+    <script>
+        window.apicartConfig = window.apicartConfig || [];
+        function apicartConfigure(config){apicartConfig.push(config)}
+        apicartConfigure({
+            token: "9mCu3DlBCa4REI?Q7kKly!Rw6!_FvD8K_dgPXe1b20?r6!sPTQMyCpq_ADt!jXOD",
+            cart: {
+                apiUrl: 'https://store-api.apicart.dev'
+            },
+            customer: {
+                apiUrl: 'https://store-api.apicart.dev'
+            },
+            order: {
+                apiUrl: 'https://store-api.apicart.dev'
+            },
+            paymentMethods: {
+                apiUrl: 'https://store-api.apicart.dev'
+            },
+            shippingMethods: {
+                apiUrl: 'https://store-api.apicart.dev'
+            }
+        });
+    </script>
+
+    <script src="./index.js" async defer></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600&amp;subset=latin-ext" rel="stylesheet" media="none" onload="if(media!='all')media='all'">
+    <script async defer src="https://use.fontawesome.com/releases/v5.8.1/js/solid.js" integrity="sha384-IA6YnujJIO+z1m4NKyAGvZ9Wmxrd4Px8WFqhFcgRmwLaJaiwijYgApVpo1MV8p77" crossorigin="anonymous"></script>
+    <script async defer src="https://use.fontawesome.com/releases/v5.8.1/js/fontawesome.js" integrity="sha384-EMmnH+Njn8umuoSMZ3Ae3bC9hDknHKOWL2e9WJD/cN6XLeAN7tr5ZQ0Hx5HDHtkS" crossorigin="anonymous"></script>
+</body>
+</html>
