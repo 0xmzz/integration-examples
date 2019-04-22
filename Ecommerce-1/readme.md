@@ -1,4 +1,4 @@
-# Static E-commerce example
+# Static E-commerce example - With prepared components and Github pages
 - Article - https://medium.com/@apicart/e-commerce-with-github-pages-eaf4ce182ce6
 
 ## Notes
