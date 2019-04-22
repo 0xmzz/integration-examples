@@ -27,29 +27,37 @@ const
         }
     };
 
-
+let orderSentPopupView = new Vue({
+    el: '#order-sent-popup-view',
+    data: {
+        showModal: false,
+    }
+});
 
 Utils.eventDispatcher
-    .addListener('item-added-popup', apicart.cart.events.ITEM_ADDED, function (itemData, quantity) {
-        console.log(itemData, quantity);
-    })
     .addListener('cart-updated', apicart.cart.events.UPDATED, function (cart) {
         cartStore.commit('updateItemsPrice', apicart.cart.manager.getItemsPrice());
         cartStore.commit('updateItemsCount', apicart.cart.manager.getItemsCount());
         cartStore.commit('updateItems', cart.items);
+
+        if ( ! cart.items.length) {
+            showCardFront();
+        }
+    })
+    .addListener('order-sent', apicart.cart.events.FINISHED, function () {
+        orderSentPopupView.showModal = true;
+    
+        setTimeout(function () {
+            orderSentPopupView.showModal = false;
+        }, 5000);
     });
+
 
 let cartStore = new Vuex.Store({
     state: {
-        itemsPrice: (function () {
-            return apicart.cart.manager.getItemsPrice();
-        })(),
-        itemsCount: (function (){
-            return apicart.cart.manager.getItemsCount();
-        })(),
-        items: (function () {
-            return apicart.cart.manager.getCart().items;
-        })()
+        itemsPrice: apicart.cart.manager.getItemsPrice(),
+        itemsCount: apicart.cart.manager.getItemsCount(),
+        items: apicart.cart.manager.getCart().items
     },
     mutations: {
         updateItemsPrice(state, payload) {
@@ -81,6 +89,11 @@ let cartButtonView = new Vue({
     computed: {
         cart() {
             return cartStore.state;
+        }
+    },
+    methods: {
+        showOrderRecapitulation() {
+            showCardBack();
         }
     },
     template: '#cart-button-template'
@@ -153,21 +166,39 @@ let addToCartFormView = new Vue({
         addPaintingToCart() {
             let 
                 selectedPainting = this.selectedPainting,
-                inputQuantity = this.quantity;
+                self = this;
 
             apicart.cart.manager.addItem(selectedPainting.imageUrl, this.quantity, function (itemData, quantity) {
                 addToCartPopupView.itemImage = './images/image-1.jpg',
                 addToCartPopupView.itemName = itemData.name;
                 addToCartPopupView.showModal = true;
-                inputQuantity = 1;
+                self.inputQuantity = 1;
             });
         }
     },
     template: '#add-to-cart-form-template'
 });
 
+
+let orderRecapitulationView = new Vue({
+    el: '#order-recapitulation-view',
+    computed: {
+        paintings() {
+            console.log(cartStore.state.items);
+            return cartStore.state.items;
+        }
+    },
+    methods: {
+        removeItemFromCart(itemId) {
+            apicart.cart.manager.removeItem(itemId);
+        }
+    },
+    template: '#order-recapitulation-template'
+});
+
+
 apicart.shippingMethods.manager.getShippingMethods(null, function(responseIsOk, response) {
-    let shippingMethodsSelectboxView = new Vue({
+    new Vue({
         el: '#shipping-methods-selectbox-view',
         data: {
             shippingMethods: responseIsOk ? response.data.findShippingMethods.shippingMethods : null
@@ -187,6 +218,11 @@ apicart.paymentMethods.manager.getPaymentMethods(null, function(responseIsOk, re
     });
 });
 
+
+document.querySelector('.show-card-front').addEventListener('click', function () {
+    showCardFront();
+    return false;
+});
 
 
 function showCardBack() {
