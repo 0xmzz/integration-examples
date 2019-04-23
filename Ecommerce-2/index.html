@@ -92,7 +92,7 @@
                                 </button>
                             </div>
                         </form>
-                        <div class="mb-5">
+                        <div class="mb-5 px-1">
                             <h2>Order recapitulation</h2>
                             <div id="order-recapitulation-view"></div>
                         </div>
@@ -186,14 +186,15 @@
     </template>
 
     <template id="order-recapitulation-template">
-        <div id="order-recapitulation-view" class="bg-white border d-inline-block">
-            <div v-for="painting of paintings" class="d-flex flex-row p-2">
-                <div>
-                    <img :src="painting.image" alt>
+        <div id="order-recapitulation-view" class="col-lg-8 px-0 bg-white border d-inline-block">
+            <div v-for="painting of paintings" class="d-flex flex-row p-2 order-item border-bottom align-items-center">
+                <div class="mr-2">
+                    <img :src="painting.images.primary.url" alt>
                 </div>
-                <div>
-                    <strong>{{ painting.name }}</strong>
-                    <span>${{ painting.price }}</span>
+                <div class="w-100 d-flex justify-content-between">
+                    <strong class="mr-2 text-left col-6 px-0">{{ painting.name }}</strong>
+                    <span class="mr-2">${{ painting.price }}</span>
+                    <span class="mr-2">{{ painting.quantity }}x</span>
                     <a role="button" @click="removeItemFromCart(painting.id)">
                         <i class="fas fa-times-circle"></i>
                     </a>
