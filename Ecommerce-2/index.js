@@ -5,25 +5,28 @@ const
             description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi imperdiet, mauris ac auctor dictum, nisl ligula egestas nulla, et sollicitudin sem purus in lacus. Pellentesque ipsum.',
             id: 'painting1',
             image: imagesPath + '/image-1.jpg',
-            imageUrl: 'https://cdn.apicart.dev/external/wlhv1egho2u4p0e0nkne2mks7f9btigi/data/14/14.json',
+            imageUrl: 'https://cdn.apicart.dev/external/wlhv1egho2u4p0e0nkne2mks7f9btigi/images/15/15-1556037361-71.jpg',
             name: 'Buildings',
-            price: 30
+            price: 30,
+            productUrl: 'https://cdn.apicart.dev/external/wlhv1egho2u4p0e0nkne2mks7f9btigi/data/15/15.json'
         },
         painting2: {
             description: 'Curabitur sagittis hendrerit ante. Fusce nibh. Etiam posuere lacus quis dolor. In laoreet, magna id viverra tincidunt, sem odio bibendum justo, vel imperdiet sapien wisi sed libero. Cras elementum.',
             id: 'painting2',
             image: imagesPath + '/image-2.jpg',
-            imageUrl: 'https://cdn.apicart.dev/external/wlhv1egho2u4p0e0nkne2mks7f9btigi/data/13/13.json',
+            imageUrl: 'https://cdn.apicart.dev/external/wlhv1egho2u4p0e0nkne2mks7f9btigi/images/16/16-1556037431-81.jpg',
             name: 'Boats',
-            price: 40
+            price: 40,
+            productUrl: 'https://cdn.apicart.dev/external/wlhv1egho2u4p0e0nkne2mks7f9btigi/data/16/16.json'
         },
         painting3: {
             description: 'Proin mattis lacinia justo. Sed convallis magna eu sem. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos.',
             id: 'painting3',
             image: imagesPath + '/image-3.jpg',
-            imageUrl: 'https://cdn.apicart.dev/external/wlhv1egho2u4p0e0nkne2mks7f9btigi/data/12/12.json',
+            imageUrl: 'https://cdn.apicart.dev/external/wlhv1egho2u4p0e0nkne2mks7f9btigi/images/17/17-1556037504-54.jpg',
             name: 'Flowers',
-            price: 50
+            price: 50,
+            productUrl: 'https://cdn.apicart.dev/external/wlhv1egho2u4p0e0nkne2mks7f9btigi/data/17/17.json'
         }
     };
 
@@ -116,7 +119,6 @@ let paintingDescriptionView = new Vue({
     el: '#painting-description-view',
     computed: {
         selectedPainting() {
-            console.log(paintings[selectedPaintingStore.state.selectedPainting]);
             return paintings[selectedPaintingStore.state.selectedPainting];
         }
     },
@@ -168,8 +170,8 @@ let addToCartFormView = new Vue({
                 selectedPainting = this.selectedPainting,
                 self = this;
 
-            apicart.cart.manager.addItem(selectedPainting.imageUrl, this.quantity, function (itemData, quantity) {
-                addToCartPopupView.itemImage = './images/image-1.jpg',
+            apicart.cart.manager.addItem(selectedPainting.productUrl, this.quantity, function (itemData, quantity) {
+                addToCartPopupView.itemImage = selectedPainting.imageUrl,
                 addToCartPopupView.itemName = itemData.name;
                 addToCartPopupView.showModal = true;
                 self.inputQuantity = 1;
@@ -184,7 +186,6 @@ let orderRecapitulationView = new Vue({
     el: '#order-recapitulation-view',
     computed: {
         paintings() {
-            console.log(cartStore.state.items);
             return cartStore.state.items;
         }
     },
@@ -226,6 +227,10 @@ document.querySelector('.show-card-front').addEventListener('click', function ()
 
 
 function showCardBack() {
+    if ( ! apicart.cart.manager.getCart().items.length) {
+        return;
+    }
+
     document.querySelector('.flip-card').classList.add('show-card-back');
 }
 
