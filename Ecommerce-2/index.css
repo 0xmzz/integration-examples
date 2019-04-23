@@ -124,3 +124,8 @@ h1, h2, h3, h4, h5, h6 {
     transform: rotateY(180deg);
     z-index: 1;
 }
+
+#order-recapitulation-view .order-item img {
+    max-width: 100px;
+    padding: 10px;
+}
