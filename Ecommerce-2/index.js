@@ -231,10 +231,21 @@ function showCardBack() {
         return;
     }
 
+    togglePerspective();
     document.querySelector('.flip-card').classList.add('show-card-back');
 }
 
 
 function showCardFront() {
+    togglePerspective();
     document.querySelector('.flip-card').classList.remove('show-card-back');
+}
+
+
+function togglePerspective() {
+    document.querySelector('.flip-card').classList.add('with-perspective');
+
+    setTimeout(function () {
+        document.querySelector('.flip-card').classList.remove('with-perspective');
+    }, 700);
 }
