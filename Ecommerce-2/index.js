@@ -174,7 +174,7 @@ let addToCartFormView = new Vue({
                 addToCartPopupView.itemImage = selectedPainting.imageUrl,
                 addToCartPopupView.itemName = itemData.name;
                 addToCartPopupView.showModal = true;
-                self.inputQuantity = 1;
+                self.quantity = 1;
             });
         }
     },
