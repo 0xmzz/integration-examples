@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="./index.css">
-    <title>My Paintings Shop</title>
+    <title>My paintings shop</title>
 </head>
 <body>
     <main>
@@ -147,23 +147,22 @@
 
     <template id="modal-template">
         <transition name="modal">
-        <div class="modal-mask">
             <div class="modal-wrapper">
-            <div class="modal-container">
-                <div class="modal-header">
-                    <slot name="header"></slot>
+                <div class="modal-container">
+                    <div class="modal-header">
+                        <slot name="header"></slot>
+                    </div>
+        
+                    <div class="modal-body">
+                        <slot name="body"></slot>
+                    </div>
+        
+                    <div class="modal-footer">
+                        <slot name="footer"></slot>
+                    </div>
                 </div>
-    
-                <div class="modal-body">
-                    <slot name="body"></slot>
-                </div>
-    
-                <div class="modal-footer">
-                    <slot name="footer"></slot>
-                </div>
+                <div class="modal-mask"></div>
             </div>
-            </div>
-        </div>
         </transition>
     </template>
 
@@ -237,7 +236,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script src="https://unpkg.com/vuex@2.0.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap.native/2.0.26/bootstrap-native-v4.min.js" async></script>
-    <script src="http://localhost:19005/v1/?components=cart,customer,order,payment-methods,shipping-methods"></script>
+    <script src="http://cdn.apicart.net/v1/?components=cart,customer,order,payment-methods,shipping-methods"></script>
     <script>
         window.apicartConfig = window.apicartConfig || [];
         function apicartConfigure(config){apicartConfig.push(config)}
