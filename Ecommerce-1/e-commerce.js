@@ -36,9 +36,9 @@ apicartConfigure({
 			footerBlocks: [
 				function(itemsCount, itemsPrice) {
 					return `
-						<div class="text-left">Number of items: ' + itemsCount + '<br>Total price: ' 
+						<div class="text-left">Number of items:` + itemsCount + `<br>Total price: ` 
 							+ Brackets.getFilter('currency').call(null, itemsPrice);
-						+ '</div>
+						+ `</div>
 					`;
 				},
 				'<div class="text-right"><a href="#delivery-information" class="btn btn-danger">Finish Order</a></div>'
